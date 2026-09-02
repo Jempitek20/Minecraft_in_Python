@@ -1,0 +1,28 @@
+name: build neuroflappy cardputer
+on:
+  push:
+    branches: [neuroflappy-cardputer-build]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: install platformio
+        run: pip install platformio
+      - name: build
+        working-directory: neuroflappy_cardputer
+        run: pio run -e m5stack-cardputer
+      - name: merge bin
+        working-directory: neuroflappy_cardputer
+        run: |
+          python -m esptool merge-bin -o neuroflappy_cardputer.bin --flash-mode dio --flash-freq 80m --flash-size 8MB 0x0 .pio/build/m5stack-cardputer/bootloader.bin 0x8000 .pio/build/m5stack-cardputer/partitions.bin 0xe000 .pio/build/m5stack-cardputer/boot_app0.bin 0x10000 .pio/build/m5stack-cardputer/firmware.bin
+      - uses: actions/upload-artifact@v4
+        with:
+          name: neuroflappy_cardputer
+          path: neuroflappy_cardputer/neuroflappy_cardputer.bin
