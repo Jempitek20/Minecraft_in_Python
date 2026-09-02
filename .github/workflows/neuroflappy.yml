@@ -21,7 +21,7 @@ jobs:
       - name: merge bin
         working-directory: neuroflappy_cardputer
         run: |
-          ~/.platformio/packages/tool-esptoolpy/esptool.py merge_bin -o neuroflappy_cardputer.bin --flash-mode dio --flash-freq 80m --flash-size 8MB 0x0 .pio/build/m5stack-cardputer/bootloader.bin 0x8000 .pio/build/m5stack-cardputer/partitions.bin 0xe000 .pio/build/m5stack-cardputer/boot_app0.bin 0x10000 .pio/build/m5stack-cardputer/firmware.bin
+          pio pkg exec --package "platformio/tool-esptoolpy" -- esptool.py merge_bin -o neuroflappy_cardputer.bin --flash_mode dio --flash_freq 80m --flash_size 8MB 0x0 .pio/build/m5stack-cardputer/bootloader.bin 0x8000 .pio/build/m5stack-cardputer/partitions.bin 0xe000 .pio/build/m5stack-cardputer/boot_app0.bin 0x10000 .pio/build/m5stack-cardputer/firmware.bin
       - uses: actions/upload-artifact@v4
         with:
           name: neuroflappy_cardputer
